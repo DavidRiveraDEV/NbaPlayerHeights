@@ -12,9 +12,9 @@ import {PlayersResult} from "./model/PlayersResult";
 export class AppComponent {
 
   title = 'NBA Player Heights';
-
   height: number = 0;
   results: PlayersResult[] | undefined;
+  displayHeight = false;
 
   constructor(private nbaService: NbaService) {}
 
@@ -23,7 +23,7 @@ export class AppComponent {
       players => {
         console.log(players);
         if (players != undefined) {
-          this.results = this.getResults(players);
+          this.results = this.getResults(players, this.height);
         }
       }, error => {
         console.error(error);
@@ -31,13 +31,25 @@ export class AppComponent {
     );
   }
 
-  private getResults(players: Player[]): PlayersResult[] {
-    let result = new PlayersResult();
-    result.first = players[0];
-    result.second = players[1];
-    let results: PlayersResult[] = [];
-    results.push(result);
-    return results;
+  getResults(players: Player[], height: number): PlayersResult[] {//OK
+    let result: PlayersResult[] = [];
+    let low = 0;
+    let high = players.length - 1;
+    while (low < high) {
+      if (Number(players[low].h_in!) + Number(players[high].h_in!) == height) {
+        let playerResult = new PlayersResult();
+        playerResult.first = players[low];
+        playerResult.second = players[high];
+        result.push(playerResult);
+      }
+      if (high > low + 1) {
+        high--;
+      } else {
+        high = players.length - 1;
+        low++;
+      }
+    }
+    return result;
   }
 
   public getFullName(player: Player): string {
@@ -51,4 +63,7 @@ export class AppComponent {
     return fullName;
   }
 
+  public getDisplayableHeight(player: Player): string {
+    return this.displayHeight ? `Height: ${player.h_in} inches` : '';
+  }
 }

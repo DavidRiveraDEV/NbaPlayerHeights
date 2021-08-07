@@ -9,15 +9,15 @@
   </div>
   <div class="card">
     <div class="card-header d-flex">
-      <span>Result</span>
+      <span>Results: {{results ? results.length : 0}}</span>
     </div>
     <div class="card-body">
       <small *ngIf="results && results.length == 0" class="text-muted">No matches found</small>
       <table *ngIf="results && results.length > 0" class="table table-striped table-bordered small">
         <tbody>
         <tr *ngFor="let result of results">
-          <td>{{getFullName(result.first)}}</td>
-          <td>{{getFullName(result.second)}}</td>
+          <td><strong>{{getFullName(result.first)}}</strong> {{getDisplayableHeight(result.first)}}</td>
+          <td><strong>{{getFullName(result.second)}}</strong> {{getDisplayableHeight(result.second)}}</td>
         </tr>
         </tbody>
       </table>
