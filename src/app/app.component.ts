@@ -15,18 +15,27 @@ export class AppComponent {
   height: number = 0;
   results: PlayersResult[] | undefined;
   displayHeight = false;
+  loading = false;
+  error = false;
 
   constructor(private nbaService: NbaService) {}
 
   getPlayers() {
+    this.loading = true;
+    this.error = false;
     this.nbaService.getPlayers().subscribe(
       players => {
-        console.log(players);
         if (players != undefined) {
           this.results = this.getResults(players, this.height);
+        } else {
+          this.results = [];
         }
+        this.loading = false;
       }, error => {
         console.error(error);
+        this.loading = false;
+        this.error = true;
+        this.results = [];
       }
     );
   }
